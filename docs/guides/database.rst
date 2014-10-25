@@ -140,36 +140,33 @@ EntityType/default.
 Entity Icons
 ~~~~~~~~~~~~
 
-Entities all have a method called ->getIcon($size).
+Every entity can be assigned an icon which is retrieved using the ``ElggEntity::getIconURL($size)`` method.
+This method accepts a ``$size`` argument that can be either of the configured icon sizes.  Use
+``elgg_get_config('icon_sizes')`` to get all possible values. The following sizes exist by default:
+``'large'``, ``'medium'``, ``'small'``, ``'tiny'``, and ``'topbar'``. The method triggers the
+``entity:icon:url`` hook_.
 
-This method accepts a $size variable, which can be either 'large',
-'medium', 'small' or 'tiny'.
+Use ``elgg_view_entity_icon($entity, $size, $vars)`` to render an icon. This will scan the following
+locations for a view and include the first match.
 
-The method triggers a `plugin hook`_ - 'entity:icon:url'. This is passed
-the following parameters:
-
-'entity' : The entity in question
-'viewtype' : The type of `view`_ e.g. 'default' or 'mobile'.
-'size' : The size.
-
-The hook should return a url.
-
-Hooks have already been defined, and will look in the following places
-for default values (in this order):
-
-.. _plugin hook: PluginHooks
-.. _view: Views
-
-#. views/$viewtype/graphics/icons/$type/$subtype/$size.png
-#. views/$viewtype/graphics/icons/$type/default/$size.png
-#. views/$viewtype/graphics/icons/default/$size.png
+#. views/$viewtype/icon/$type/$subtype.php
+#. views/$viewtype/icon/$type/default.php
+#. views/$viewtype/icon/default.php
 
 Where
 
-$viewtype : The type of `view`_ e.g. 'default' or 'mobile'.
-$type : The type of entity - group, site, user, object.
-$subtype : Subtype of $type, e.g. blog, page.
-$size : Size - 'large', 'medium', 'small' or 'tiny'
+$viewtype
+	Type of view, e.g. ``'default'`` or ``'json'``.
+$type
+	Type of entity, e.g. ``'group'`` or ``'user'``.
+$subtype
+	Entity subtype, e.g. ``'blog'`` or ``'page'``.
+
+By convention entities that have an uploaded avatar or icon will have the ``icontime`` property
+assigned. This means that you can use ``$entity->icontime`` to check if an icon exists for the given
+entity.
+
+.. _hook: hooks-list.rst#other
 
 Adding, reading and deleting annotations
 ----------------------------------------
@@ -239,7 +236,7 @@ Entity Icons
 ~~~~~~~~~~~~
 
 A url for an icon representing a given entity can be retrieved by the
-``getIcon()`` method.
+``ElggEntity::getIconURL($size)`` method.
 
 This is handy as it provides a generic interface which allows the Elgg
 framework to draw an icon for your data - it also allows you to override
